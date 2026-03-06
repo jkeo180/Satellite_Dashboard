@@ -5,7 +5,8 @@ matplotlib
 numpy
 skyfield
 folium
-streamlit folium
+streamlit_folium
 threading
 streamlit.runtime.scriptrunner
 plotly
+
