@@ -6,6 +6,6 @@ numpy
 skyfield
 folium
 streamlit_folium
-threading
 streamlit.runtime.scriptrunner
 plotly
+
