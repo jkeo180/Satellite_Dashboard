@@ -94,8 +94,9 @@ while True:
         pass
     except KeyboardInterrupt:
         print("Exiting live tracker.")
-        for overpass in overpasses:
-    print(f"* Rise time: {overpass.rise_time_utc.strftime('%Y-%m-%d %H:%M:%S UTC')}, Max elevation: {overpass.max_elevation_deg:.1f} deg, Set time: {overpass.set_time_utc.strftime('%Y-%m-%d %H:%M:%S UTC')}")
+    for overpass in overpasses:
+        print(f"* Rise time: {overpass.rise_time_utc.strftime('%Y-%m-%d %H:%M:%S UTC')}, Max elevation: {overpass.max_elevation_deg:.1f} deg, Set time: {overpass.set_time_utc.strftime('%Y-%m-%d %H:%M:%S UTC')}")
 
         break
+
 
