@@ -8,7 +8,8 @@ import folium
 from streamlit_folium import st_folium
 import threading
 from streamlit.runtime.scriptrunner import add_script_run_ctx
-from plotly import graph_objs as go # For potential future use
+from plotly import graph_objs as go 
+from passpredict import CelestrakTLESource, Location, SGP4Propagator, Observer
 st.title("Interactive Folium Map")
 
 latitude = 37.7749
@@ -74,7 +75,9 @@ while True:
             "lon": round(subpoint.longitude.degrees, 4),
             "alt_km": round(subpoint.elevation.km)
         })
-    
+        satellite = SGP4Propagator.from_tle(tle)
+        observer = Observer(location, satellite)
+        overpasses = observer.pass_list(date_start, limit_date=date_end)
     df = pd.DataFrame(data)
     df_display = df.copy()
     df_display["size"] = 100  # Set a fixed size for all markers
@@ -91,4 +94,5 @@ while True:
         pass
     except KeyboardInterrupt:
         print("Exiting live tracker.")
+
         break
