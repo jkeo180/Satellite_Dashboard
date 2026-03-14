@@ -4,34 +4,43 @@ import requests
 from io import StringIO
 import pandas as pd
 import time
+import datetime
 import folium
 from streamlit_folium import st_folium
 import threading
 from streamlit.runtime.scriptrunner import add_script_run_ctx
 from plotly import graph_objs as go 
-from passpredict import CelestrakTLESource, Location, SGP4Propagator, Observer
+from sgp4.api import Satrec
+
 st.title("Interactive Folium Map")
-
-latitude = 37.7749
-longitude = -122.4194
-zoom_level = 12
-m = folium.Map(location=[latitude, longitude], zoom_start=zoom_level, tiles='OpenStreetMap') # Use other tiles for satellite view
-
-map_data = st_folium(m, use_container_width=True, height=400)
-folium.TileLayer('http://mt0.google.com/vt/lyrs=s&hl=en&x={x}&y={y}&z={z}', name='Google Satellite', attr='Google').add_to(m)
-folium.LayerControl().add_to(m) 
+class Location:
+    latitude = 37.7749
+    longitude = -122.4194
+    zoom_level = 12
+    m = folium.Map(location=[latitude, longitude], zoom_start=zoom_level, tiles='OpenStreetMap') # Use other tiles for satellite view
+    map_data = st_folium(m, use_container_width=True, height=400)
+    folium.TileLayer('http://mt0.google.com/vt/lyrs=s&hl=en&x={x}&y={y}&z={z}', name='Google Satellite', attr='Google').add_to(m)
+    folium.LayerControl().add_to(m) 
 
 # Add layer control for users to switch layers
 # Render the map and capture user interactions in real-time
-map_data = st_folium(m, width=700, height=500)
+    map_data = st_folium(m, width=700, height=500)
 
 # You can access data like the last clicked location or current bounds
-if map_data:
-    st.write("Last clicked location:", map_data.get("last_clicked"))
- 
-def my_function_in_thread():
-    st.write(map_data)
+class Location:
+    def __init__(self, name, lat, lng, alt=0):
+        self.name = name
+        self.lat = lat
+        self.lng = lng
+        self.alt = alt
+m = folium.Map(location=[37.7749, -122.4194], zoom_start=2)
+map_data = st_folium(m, key="satellite_map")
+if map_data and map_data.get("last_clicked"):
+            click = map_data["last_clicked"]
+else:
+    pv_loc = Location("San Francisco", 37.7749, -122.4194, 0)
 
+# 3. Rest of your UI
 st.title("Live Satellite Tracker — Active Satellites")
 
 url = "https://celestrak.org/NORAD/elements/gp.php?GROUP=active&FORMAT=tle"
@@ -75,9 +84,16 @@ while True:
             "lon": round(subpoint.longitude.degrees, 4),
             "alt_km": round(subpoint.elevation.km)
         })
-        satellite = SGP4Propagator.from_tle(tle)
-        observer = Observer(location, satellite)
-        overpasses = observer.pass_list(date_start, limit_date=date_end)
+        satellite = Satrec.twoline2rv(tle.line1, tle.line2)
+        ts = load.timescale()
+        location = location("San Francisco", 37.7749, -122.4194, 0)
+        date_start = datetime.datetime.utcnow()
+        observer = observer(location, satellite)
+        overpasses = observer.pass_list(date_start, limit_date= datetime.timedelta(days=1))
+
+# To this (using your pv_loc instance):
+    tle = f"{name}\n{sat.model.line1}\n{sat.model.line2}"
+
     df = pd.DataFrame(data)
     df_display = df.copy()
     df_display["size"] = 100  # Set a fixed size for all markers
@@ -85,7 +101,8 @@ while True:
     with placeholder.container():
         st.map(df_display, latitude="lat", longitude="lon", size=100, color="#ff0000")
         st.dataframe(df)
-    thread = threading.Thread(target=my_function_in_thread)
+    
+    thread = threading.Thread(target=my_function_in_thread,args=(pv_loc, satellite))
     add_script_run_ctx(thread) # Add the context to the thread
     thread.start()
     status.write(f"Last update: {now.utc_strftime('%H:%M:%S UTC')} — refreshing in 10s")
@@ -98,5 +115,3 @@ while True:
         print(f"* Rise time: {overpass.rise_time_utc.strftime('%Y-%m-%d %H:%M:%S UTC')}, Max elevation: {overpass.max_elevation_deg:.1f} deg, Set time: {overpass.set_time_utc.strftime('%Y-%m-%d %H:%M:%S UTC')}")
 
         break
-
-
