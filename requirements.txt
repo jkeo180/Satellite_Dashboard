@@ -7,4 +7,3 @@ skyfield
 folium
 streamlit_folium
 plotly
-sgp4.api
