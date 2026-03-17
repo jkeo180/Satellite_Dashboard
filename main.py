@@ -50,5 +50,5 @@ for name, sat in satellites[:5]:
         print(f"{name:30}  {subpoint.latitude.degrees:7.3f}°  {subpoint.longitude.degrees:8.3f}°  {subpoint.elevation.km:6.1f} km")
     except Exception as e:
         print(f"Error calculating position for {name}: {e}")
-process = Popen(['python', 'my_script.py'])
+process = Popen(['python', 'ui.py'])
 add_script_run_ctx(process, ctx)

@@ -8,3 +8,4 @@ folium
 streamlit_folium
 plotly
 passpredict
+sgp4.api
