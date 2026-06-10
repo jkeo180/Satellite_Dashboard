@@ -6,9 +6,13 @@ import datetime
 
 st.title("🛰️ Live Satellite Tracker")
 @st.cache_resource(ttl=3600)
-def fetch_satellites():
-   url = "https://celestrak.org/NORAD/elements/gp.php?GROUP=active&FORMAT=tle"
+def track_starlink():
+    # 1. Fetch live Starlink TLE data from CelesTrak
+    # CelesTrak provides dedicated, up-to-date text streams for major constellations
+    tle_url = 'https://celestrak.org'
+    print("Fetching live Starlink orbital elements...")
    return load.tle_file(url)
+
 # 1. Load Data
 ts = load.timescale()
 t_now = load.timescale().now()
