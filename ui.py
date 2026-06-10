@@ -11,13 +11,14 @@ def track_starlink():
     # CelesTrak provides dedicated, up-to-date text streams for major constellations
     tle_url = 'https://celestrak.org'
     print("Fetching live Starlink orbital elements...")
-    return load.tle_file(url)
+    return load.tle_file()
 
 # 1. Load Data
 ts = load.timescale()
 t_now = load.timescale().now()
 satellites = fetch_satellites()
 sat_data = []
+
 # 2. Compute Positions
 for sat in satellites:
     geocentric = sat.at(t_now) 
