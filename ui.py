@@ -16,22 +16,19 @@ satellites = fetch_satellites()
 sat_data = []
 # 2. Compute Positions
 for sat in satellites:
-    geocentric = sat.at(t_now) 
-    subpoint = wgs84.subpoint(geocentric) 
-try:
-      
+    try:
+        geocentric = sat.at(t_now)
+        subpoint = wgs84.subpoint(geocentric)
+
         sat_data.append({
             "name": sat.name,
             "lat": subpoint.latitude.degrees,
             "lon": subpoint.longitude.degrees,
             "alt_km": round(subpoint.elevation.km, 2)
         })
-        
-finally:
-     
-#except:
-        st.warning(f"Could not compute position for {sat.name}. Skipping.")
 
+    except Exception as e:
+        st.warning(f"Could not compute position for {sat.name}: {e}")
 # 3. Display
 df = pd.DataFrame(sat_data)
 if not df.empty:
