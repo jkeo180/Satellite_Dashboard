@@ -1,9 +1,9 @@
 streamlit
-requests
 pandas
-matplotlib
 numpy
-skyfield
-folium
-streamlit_folium
 plotly
+skyfield
+sgp4
+requests
+streamlit-folium
+folium
