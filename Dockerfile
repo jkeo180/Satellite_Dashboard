@@ -11,5 +11,5 @@ RUN .venv/bin/pip install -r requirements.txt
 FROM python:3.12.13-slim
 WORKDIR /app
 COPY --from=builder /app/.venv .venv/
-COPY . .
-CMD ["/app/.venv/bin/streamlit", "run", "main.py"]
+COPY . 
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
