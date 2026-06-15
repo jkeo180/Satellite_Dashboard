@@ -1,7 +1,7 @@
 import requests
 from skyfield.api import load, EarthSatellite, wgs84
 import time
-import streamlit as st
+brew install flyctl
 from streamlit.runtime.scriptrunner import add_script_run_ctx, get_script_run_ctx
 from subprocess import Popen
 
