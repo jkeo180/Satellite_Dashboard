@@ -1,10 +1,10 @@
-# fly.toml app configuration file generated for satellite-dashboard on 2026-06-11T20:56:49Z
+# fly.toml app configuration file generated for satellite-dashboard on 2026-06-18T13:18:51Z
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
 app = 'satellite-dashboard'
-primary_region = 'ams'
+primary_region = 'dfw'
 
 [build]
 
