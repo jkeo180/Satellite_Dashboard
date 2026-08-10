@@ -1,6 +1,6 @@
 FROM python:3.11-slim
 
-# Install system dependencies required for mapping libraries
+# Install system utilities
 RUN apt-get update && apt-get install -y \
     build-essential \
     libgeos-dev \
@@ -8,12 +8,14 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
-# Copy and install dependencies
+# Explicitly upgrade pip and install dependencies globally
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the application files
+# Verify installation paths during build step
+RUN which streamlit || echo "Streamlit executable path check failed"
+
 COPY . .
 
-# Force Streamlit to listen to Fly's incoming web port
+# Force target port and bind address mapping
 CMD ["streamlit", "run", "app.py", "--server.port=8080", "--server.address=0.0.0.0"]
