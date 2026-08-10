@@ -1,4 +1,4 @@
-# fly.toml app configuration file generated for satellite-dashboard on 2026-06-11T20:56:49Z
+# fly.toml app configuration file generated for satellite-dashboard on 2026-06-22T21:37:42Z
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
@@ -11,7 +11,7 @@ primary_region = 'ams'
 [http_service]
   internal_port = 8080
   force_https = true
-  auto_stop_machines = 'stop'
+  auto_stop_machines = true
   auto_start_machines = true
   min_machines_running = 0
   processes = ['app']
@@ -21,3 +21,6 @@ primary_region = 'ams'
   cpu_kind = 'shared'
   cpus = 1
   memory_mb = 256
+
+[processes]
+  app = ''
